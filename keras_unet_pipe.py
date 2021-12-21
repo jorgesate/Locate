@@ -22,11 +22,10 @@ import cv2
 # Set some parameters
 IMG_SHAPE = 512
 IMG_CHANNELS = 1
-
-AUTO = tf.data.experimental.AUTOTUNE
 BATCH_SIZE = 4
 SPLIT = 15
 EPOCHS = 50
+AUTO = tf.data.experimental.AUTOTUNE
 
 TRAIN_PATH =      './dots/train/image'
 TEST_PATH =       './dots/test/'
@@ -192,7 +191,7 @@ def get_model_Unet_v1():
 
 # Callbacks
 
-log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ""
 image_writer = tf.summary.create_file_writer(log_dir)
 tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1, write_images=True)
 earlystopper = EarlyStopping(patience=10, verbose=2, min_delta=0.01, monitor="loss")
@@ -201,8 +200,10 @@ checkpointer = ModelCheckpoint('model-checkpoint.h5', verbose=0, save_best_only=
 # Create model
 model = get_model_Unet_v1()
 
-#Compile model
-#model.compile(optimizer='adam', loss='binary_crossentropy', metrics=["mae", "acc"])
+# Compile model 1:
+# Buena separacion con el fondo, reconocimiento completo de la zona
+# Unet_v1, IMG_SHAPE = 512, IMG_CHANNELS = 1, BATCH_SIZE = 4, SPLIT = 15, EPOCHS = 50
+# optimizer='sgd', loss='binary_crossentropy', metrics=[tf.keras.metrics.BinaryCrossentropy()]
 model.compile(optimizer='sgd', loss='binary_crossentropy', metrics=[tf.keras.metrics.BinaryCrossentropy()])
 # model.summary()
 
